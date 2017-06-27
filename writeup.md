@@ -12,21 +12,42 @@ The goals / steps of this project are the following:
 * Summarize the results with a written report
 
 
+[//]: # (Image References)
+
+[image1]: ./examples/visualization.jpg "Visualization"
+[image2]: ./examples/grayscale.jpg "Grayscaling"
+[image3]: ./examples/random_noise.jpg "Random Noise"
+[image4]: ./examples/placeholder.png "Traffic Sign 1"
+[image5]: ./examples/placeholder.png "Traffic Sign 2"
+[image6]: ./examples/placeholder.png "Traffic Sign 3"
+[image7]: ./examples/placeholder.png "Traffic Sign 4"
+[image8]: ./examples/placeholder.png "Traffic Sign 5"
+[datasetsummary]: ./raw_dataset_summary.png "Data-set summary"
+[graysign]: ./google/gray_sign.png "Gray scaled"
+[colorsign]: ./google/color_sign.png "RGB color"
+[clahesign]: ./google/clahe_sign.png "Contrast-enhanced"
+[augmentedimage]: ./google/augmented_image.png "90 degree sign rotations"
+[augmentedsummary]: ./augmented_dataset_summary "Augmented data-set summary"
+[sign1]: ./google/sign_1.jpg "Yield"
+[sign3]: ./google/sign_3.jpg "Turn righ-ahead"
+[sign4]: ./google/sign_4.jpg "Vehicles over 3.5 metric tons prohibited"
+[sign5]: ./google/sign_5.jpg "Keep right"
+[sign6]: ./google/sign_6.jpg "Road narrows on the right"
+[signs]: ./signs.png
+
 ## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
+I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
 
 Link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
-###Acknowledgements
-Udacity course material, Ian Goodfellow "Deep Learning" book, Sermane & LeCun 2011 traffic sign paper, Stanford CS231n lecture materials, [blog post](https://navoshta.com/traffic-signs-classification/) by Alex Staravoitau (especially idea on symmetries between traffic signs) were very helpful in completing this project.
+### Acknowledgements
+Udacity course material, Ian Goodfellow "Deep Learning" book, Sermanet & LeCun 2011 traffic sign paper [Sermanet2011], Stanford CS231n lecture materials, [blog post](https://navoshta.com/traffic-signs-classification/) by Alex Staravoitau (especially idea on symmetries between traffic signs) were very helpful in completing this project. Some code was taken from the course material examples.
 
-###Data Set Summary & Exploration
+### Data Set Summary & Exploration
 
-####1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
+#### 1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
-I used the pandas library to calculate summary statistics of the traffic
-signs data set:
-
+I calculated summary statistics of the traffic signs data set in cell two of the worksheet:
 * The size of training set is 34799
 * The size of the validation set is 4410
 * The size of test set is 12630
@@ -35,9 +56,12 @@ signs data set:
 
 ####2. Include an exploratory visualization of the dataset.
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how may samples there are per class per data set (training, validation, testing).
+In the dataset we have 43 classes of images with very different brightness and contrast:
+![signs][signs]
 
-![Data set summary][./raw_dataset_summary.png]
+Following figure shows how samples are distributed per class and per dataset (training, validation, testing):
+
+![datasetsummary][datasetsummary]
 
 ###Design and Test a Model Architecture
 
@@ -46,28 +70,24 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 As a first step I decided to convert the images to grayscale because [as described in Sermanet & LeCun 2011](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf) paper, colour information was not very useful for the kind of neural net architecture that is going to be used in this homework.
 
 Here is an example of a traffic sign image before and after grayscaling.
-![alt text][./google/color_sign.png]
-![alt text][./google/gray_sign.png]
+![color sign][colorsign]
+![gray sign][graysign]
 
-Afterwards contrast-limited adaptive histogram equalization was applied, to bring more detail out of the images and help in the training. It also adjusted the general lightness of the signs as well, if the sign was in a shadow, for example.
-![alt text][./google/clahe_sign.png]
+Afterwards contrast-limited adaptive histogram equalization (CLAHE) was applied, to bring more detail out of the images and help in the training. It also adjusted the general lightness of the signs as well, if the sign was in a shadow, for example.
+![clahe sign][clahesign]
 
 As a last step, I normalized the image data to interval [-1,1] because this helps to improve gradient descent performance.
 
 I decided to generate additional data because, some traffic sign classes were underrepresented. For example while '50 km/h speed limit' had 2010 training samples, 'dangerous curve to the left', had only 180 samples.
 
 To add more data to the the data set, I looked at the symmetries between the traffic sign classes, and either flipped or rotated them. Also some traffic signs classes could be converted to the other traffic sign classes.
-
+![Sign rotations][augmentedimage]
 LeCun and Sermanet also create additional samples by applying various randomized transformations, like perpective transformations, but as the network trained well enough, did not pursue that direction. For over 99% traffic sign recognition accuracy, that would be needed.
 
-Here is an example of an original image and an augmented image:
-![left-most is the original image, others augmented versions][image3]
-
-The difference between the original data set and the augmented data set is the following ... 
 Originally, there were 34799 test samples, after augmentation, 55859. Validation sample set was not augmented in this way, but it would be desirable in the future, as it would give a more exact information on the training process.
 
 Breakdown of the augmented data set by class and set:
-![Data set summary][./augmented_dataset_summary.png]
+![Augmented data set summary][augmentedsummary]
 
 ####2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) 
 My final model was a LeNet model, augmented with multi-scale pooling described in Sermanet2011 paper. It consists of three convolution layers and two fully connected layers. The outputs of all convolution layers were inputted to the first fully connected layers (additional maxpooling with stride 4x4 was applied to 1st conv layer output; for 2nd conv layer output the additional maxpooling stride was 2x2; no additional maxpooling for 3rd convolutional layer). After the first fully connected layer, an additional fully connected layer was added.
@@ -81,15 +101,15 @@ My final model consisted of the following layers:
 | Convolution 5x5     	| 1x1 stride, same padding, outputs 32x32x32 	|
 | RELU					|												|
 | Max pooling	      	| 2x2 stride,  outputs 16x16x32 				|
-| Convolution 5x5     	| 1x1 stride, same padding, outputs 16x16x128 	|
+| Convolution 5x5     	| 1x1 stride, same padding, outputs 16x16x108 	|
 | RELU					|												|
 | Max pooling	      	| 2x2 stride,  outputs 8x8x108 					|
-| Convolution 5x5     	| 1x1 stride, same padding, outputs 8x8x64 		|
+| Convolution 5x5     	| 1x1 stride, same padding, outputs 8x8x108 	|
 | RELU					|												|
-| Max pooling 3rd conv	| 2x2 stride,  outputs 4x4x64 					|
-| Max pooling 1st layer | 4x4 stride,  outputs 4x4x128 					|
-| Max pooling 2nd layer | 2x2 stride,  outputs 4x4x32 					|
-| Fully connected		| (64+128+32)*4*4, multi-scale, outputs 1024	|
+| Max pooling 3rd conv	| 2x2 stride,  outputs 4x4x108 					|
+| Max pooling 1st layer | 4x4 stride,  outputs 4x4x32 					|
+| Max pooling 2nd layer | 2x2 stride,  outputs 4x4x108 					|
+| Fully connected		| (108+108+32)*4*4, multi-scale, outputs 1024	|
 |						| concatenation of last 3 max pools	, 			|
 | Dropout				| Dropout regularization						|
 | Fully connected		| Outputs 400									|
@@ -116,15 +136,16 @@ My final model results were:
 * test set accuracy of 0.972
 
 Training data set was augmented using symmetries between the traffic signs. Validation and test data sets were not modified 
-ˇˇˇ
+```python
 X_augmented_train, y_augmented_train = generate_data(X_train, y_train)
 X_processed_train, y_processed_train = preprocess(X_augmented_train), y_augmented_train
 X_processed_test = preprocess(X_test)
 X_processed_valid = preprocess(X_valid)    
-ˇˇˇ
+```
 
 Accuracy of the data sets was calculated by setting all the dropout rates to 1.
-ˇˇˇ
+
+```python
 def evaluate(X_data, y_data, find_top_k = False, k = 3):
     num_examples = len(X_data)
     total_accuracy, total_loss = 0, 0
@@ -147,7 +168,7 @@ def evaluate(X_data, y_data, find_top_k = False, k = 3):
     else:
         top_k = None
     return total_loss / num_examples, total_accuracy / num_examples, top_k
-ˇˇˇ
+```
 
 An iterative approach was chosen.
 * Current architecture is a slightly modified version of the multi-scale feature LeNet architecture from Sermanet&LeCun 2011 paper. It achieved in the paper 99.17% accuracy.
@@ -169,8 +190,8 @@ From the examples one can deduce, that signs where small features make all the d
 
 Here are five German traffic signs that I found on the web:
 
-![alt text][./google/sign_1.jpg] ![alt text][./google/sign_3.jpg] ![alt text][./google/sign_4.jpg] 
-![alt text][./google/sign_5.jpg] ![alt text][./google/sign_6.jpg]
+![alt text][sign1] ![alt text][sign3] ![alt text][sign4] 
+![alt text][sign5] ![alt text][sign6]
 
 The first image might be difficult to classify because ...
 
