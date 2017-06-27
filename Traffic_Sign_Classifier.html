@@ -18806,7 +18806,7 @@ iBpTRVEURTkjakwVRVEU5YyoMVUURVGUM6LGVFEURVHOyP8BHn6vXpCSwfgAAAAASUVORK5CYII=
 <span class="c1">### converting to grayscale, etc. </span>
 <span class="c1">###   return (float_image - 128.)/128.</span>
 <span class="c1">### Feel free to use as many code cells as needed.</span>
-<span class="n">clahe</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">createCLAHE</span><span class="p">(</span><span class="n">tileGridSize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span><span class="c1">#, clipLimit = 0.05</span>
+<span class="n">clahe</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">createCLAHE</span><span class="p">(</span><span class="n">tileGridSize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
 <span class="k">def</span> <span class="nf">normalize_image</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Normalizing to [-1,1] range</span>
@@ -18821,12 +18821,10 @@ iBpTRVEURTkjakwVRVEU5YyoMVUURVGUM6LGVFEURVHOyP8BHn6vXpCSwfgAAAAASUVORK5CYII=
 <span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">normalize_image</span><span class="p">(</span><span class="n">clahe</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_to_grayscale</span><span class="p">(</span><span class="n">image</span><span class="p">)))</span> <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
 
-<span class="c1"># on symmetry transformations of traffic sign data, https://navoshta.com/traffic-signs-classification/ has great examples</span>
 <span class="k">def</span> <span class="nf">generate_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    We augment existing data set with additional data by exploiting symmetries of traffic signs and also </span>
 <span class="sd">    by deforming/occluding the traffic signs. Example is given here https://navoshta.com/traffic-signs-classification/</span>
-<span class="sd">    Found some additional symmetries</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># rotation invariant</span>
     <span class="n">rot90_inv</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
@@ -20797,7 +20795,7 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 <span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">256</span>
 <span class="n">dropout_1</span> <span class="o">=</span> <span class="mf">0.7</span>
 <span class="n">dropout_2</span> <span class="o">=</span> <span class="mf">0.5</span>
-<span class="n">l2_penalty</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="c1">#0.0001</span>
+<span class="n">l2_penalty</span> <span class="o">=</span> <span class="mf">0.0001</span>
 <span class="n">l1_penalty</span> <span class="o">=</span> <span class="mf">0.00008</span>
 <span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.1</span>
