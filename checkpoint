@@ -1,0 +1,3 @@
+model_checkpoint_path: "traffic_sign"
+all_model_checkpoint_paths: "traffic_sign_epoch"
+all_model_checkpoint_paths: "traffic_sign"
