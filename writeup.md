@@ -34,6 +34,8 @@ The goals / steps of this project are the following:
 [sign5]: ./google/sign_5.jpg "Keep right"
 [sign6]: ./google/sign_6.jpg "Road narrows on the right"
 [signs]: ./signs.png
+[training]: ./training_graph.png
+[validation]: ./validation_graph.png
 
 ## Rubric Points
 I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -41,7 +43,7 @@ I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/vi
 Link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
 ### Acknowledgements
-Udacity course material, Ian Goodfellow "Deep Learning" book, Sermanet & LeCun 2011 traffic sign paper [Sermanet2011], Stanford CS231n lecture materials, [blog post](https://navoshta.com/traffic-signs-classification/) by Alex Staravoitau (especially idea on symmetries between traffic signs) were very helpful in completing this project. Some code was taken from the course material examples.
+Udacity course material, Ian Goodfellow "Deep Learning" book, Sermanet & LeCun 2011 traffic sign paper [Sermanet2011], Stanford CS231n lecture materials, [blog post](https://navoshta.com/traffic-signs-classification/) by Alex Staravoitau (especially ideas on symmetries between traffic signs, about early termination) were very helpful in completing this project. Some code was taken from the course material examples.
 
 ### Data Set Summary & Exploration
 
@@ -290,6 +292,12 @@ Also an additional fully connected layer was added, as it helped to improve accu
     * Dropout rate of the second fully connected layer was set at 0.5. This hyperparameter turned out to be important, as it gave around 1% improvement in accuracy. It helped to prevent overfitting.
     * Batch size affected the performance of the training. 256 seems to be optimal for my hardware, a Nvidia P5000 graphics card.
     * L2 penalty was set at 0.0001 and L1 penalty at 0.00008
+    * Epoch number was 300
+    
+Early termination caused epoch 197 result to be chosen with validation loss of 0.120658143044.
+Due to dropout, the moving average of training and validation loss did decrease constantly, despite the oscillations:
+![training][training]
+![validation][validation]
 
 ### Test a Model on New Images
 
