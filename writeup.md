@@ -28,16 +28,14 @@ The goals / steps of this project are the following:
 
 Link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
-###Acknowledgements
-Udacity course material, Ian Goodfellow "Deep Learning" book, Sermane & LeCun 2011 traffic sign paper, Stanford CS231n lecture materials, [blog post](https://navoshta.com/traffic-signs-classification/) by Alex Staravoitau (especially idea on symmetries between traffic signs) were very helpful in completing this project.
+### Acknowledgements
+Udacity course material, Ian Goodfellow "Deep Learning" book, Sermanet & LeCun 2011 traffic sign paper [Sermanet2011], Stanford CS231n lecture materials, [blog post](https://navoshta.com/traffic-signs-classification/) by Alex Staravoitau (especially idea on symmetries between traffic signs) were very helpful in completing this project.
 
-###Data Set Summary & Exploration
+### Data Set Summary & Exploration
 
-####1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
+#### 1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
-I used the pandas library to calculate summary statistics of the traffic
-signs data set:
-
+I calculated summary statistics of the traffic signs data set in cell two of the worksheet:
 * The size of training set is 34799
 * The size of the validation set is 4410
 * The size of test set is 12630
@@ -48,7 +46,7 @@ signs data set:
 
 Here is an exploratory visualization of the data set. It is a bar chart showing how may samples there are per class per data set (training, validation, testing).
 
-![Data set summary][./raw_dataset_summary.png]
+![Data set summary][raw_dataset_summary.png]
 
 ###Design and Test a Model Architecture
 
@@ -57,8 +55,8 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 As a first step I decided to convert the images to grayscale because [as described in Sermanet & LeCun 2011](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf) paper, colour information was not very useful for the kind of neural net architecture that is going to be used in this homework.
 
 Here is an example of a traffic sign image before and after grayscaling.
-![alt text][./google/color_sign.png]
-![alt text][./google/gray_sign.png]
+![alt text][google/color_sign.png]
+![alt text][google/gray_sign.png]
 
 Afterwards contrast-limited adaptive histogram equalization was applied, to bring more detail out of the images and help in the training. It also adjusted the general lightness of the signs as well, if the sign was in a shadow, for example.
 ![alt text][./google/clahe_sign.png]
@@ -71,14 +69,11 @@ To add more data to the the data set, I looked at the symmetries between the tra
 
 LeCun and Sermanet also create additional samples by applying various randomized transformations, like perpective transformations, but as the network trained well enough, did not pursue that direction. For over 99% traffic sign recognition accuracy, that would be needed.
 
-Here is an example of an original image and an augmented image:
-![left-most is the original image, others augmented versions][image3]
-
 The difference between the original data set and the augmented data set is the following ... 
 Originally, there were 34799 test samples, after augmentation, 55859. Validation sample set was not augmented in this way, but it would be desirable in the future, as it would give a more exact information on the training process.
 
 Breakdown of the augmented data set by class and set:
-![Data set summary][./augmented_dataset_summary.png]
+![Data set summary][./augmented_dataset_summary]
 
 ####2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) 
 My final model was a LeNet model, augmented with multi-scale pooling described in Sermanet2011 paper. It consists of three convolution layers and two fully connected layers. The outputs of all convolution layers were inputted to the first fully connected layers (additional maxpooling with stride 4x4 was applied to 1st conv layer output; for 2nd conv layer output the additional maxpooling stride was 2x2; no additional maxpooling for 3rd convolutional layer). After the first fully connected layer, an additional fully connected layer was added.
